@@ -19,17 +19,7 @@ repositories {
     mavenCentral()
     jcenter()
     repositories {
-        maven {
-            url = uri("http://maven.handtruth.com/")
-        }
-    }
-}
-
-allprojects {
-    repositories {
-        maven {
-            url = uri("http://maven.handtruth.com/")
-        }
+        maven("http://maven.handtruth.com/")
     }
 }
 
@@ -96,8 +86,9 @@ jacoco {
 }
 
 tasks {
+    val jvmTest by getting
     val testCoverageReport by creating(JacocoReport::class) {
-        dependsOn("jvmTest")
+        dependsOn(jvmTest)
         group = "Reporting"
         description = "Generate Jacoco coverage reports."
         val coverageSourceDirs = arrayOf(
