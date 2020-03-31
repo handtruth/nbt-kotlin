@@ -6,7 +6,6 @@ import com.handtruth.mc.nbt.asNBTInput
 import com.handtruth.mc.nbt.buildCompoundTag
 import kotlinx.io.ByteArrayInput
 import kotlinx.io.ByteArrayOutput
-import kotlinx.io.asInputStream
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -87,7 +86,7 @@ class BinaryFormatTest {
 
     @Test
     fun easy() {
-        val input = open("easy.nbt").asInputStream().readAllBytes()
+        val input = open("easy.nbt")
         val root = buildCompoundTag {
             "hello world" {
                 "name" ("Bananrama")
@@ -95,9 +94,9 @@ class BinaryFormatTest {
         }
         val output = ByteArrayOutput()
         NBT.write(output, root)
-        assertEquals(input.joinToString { it.toString(radix = 16) },
-            output.toByteArray().joinToString { it.toString(radix = 16) })
         val decode = ByteArrayInput(output.toByteArray())
-        println(NBT.read(decode))
+        val easy1 = NBT.read(decode)
+        val easy2 = NBT.read(input)
+        assertEquals(easy1, easy2)
     }
 }
