@@ -1,35 +1,61 @@
 @file:Suppress("UNUSED_VARIABLE")
 
 plugins {
+    id("com.gladed.androidgitversion")
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
+    `maven-publish`
     jacoco
 }
 
-group = "com.handtruth"
-version = "0.1.0"
+androidGitVersion {
+    prefix = "v"
+}
+
+group = "com.handtruth.mc"
+version = androidGitVersion.name()
 
 repositories {
     mavenCentral()
+    jcenter()
+    repositories {
+        maven {
+            url = uri("http://maven.handtruth.com/")
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url = uri("http://maven.handtruth.com/")
+        }
+    }
 }
 
 kotlin {
     jvm()
-    js()
-    mingwX64()
-    mingwX86()
-    linuxX64()
-    linuxArm32Hfp()
-    linuxArm64()
-    wasm32()
+    js {
+        nodejs()
+        browser()
+    }
     sourceSets {
+        fun kotlinx(name: String) = "org.jetbrains.kotlinx:kotlinx-$name"
         all {
+            with(languageSettings) {
+                useExperimentalAnnotation("kotlin.contracts.ExperimentalContracts")
+            }
             dependencies {
-                implementation(project(":platform"))
+                val platformVersion: String by project
+                val handtruthPlatform = dependencies.platform("com.handtruth.internal:platform:$platformVersion")
+                implementation(handtruthPlatform)
             }
         }
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
+                implementation(kotlinx("io"))
+                implementation(kotlinx("serialization-runtime-common"))
+                implementation(kotlin("stdlib-common"))
             }
         }
         val commonTest by getting {
@@ -38,14 +64,22 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
+        val jvmMain by getting {
+            dependencies {
+                implementation(kotlinx("serialization-runtime"))
+                implementation(kotlin("stdlib-jdk8"))
+            }
+        }
         val jvmTest by getting {
             dependencies {
-                implementation(kotlin("test-junit5"))
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                implementation(kotlinx("serialization-runtime-js"))
             }
         }
         val jsTest by getting {
