@@ -27,7 +27,13 @@ kotlin {
     jvm()
     js {
         nodejs()
-        browser()
+        browser {
+            testTask {
+                useKarma {
+                    usePhantomJS()
+                }
+            }
+        }
     }
     sourceSets {
         fun kotlinx(name: String) = "org.jetbrains.kotlinx:kotlinx-$name"

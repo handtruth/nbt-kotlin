@@ -5,6 +5,8 @@ import com.handtruth.mc.nbt.TagID
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+private const val errorValue = 1e-4
+
 @Serializable
 data class BigNBTObject(@SerialName("Level") val level: Level)
 
@@ -35,8 +37,8 @@ data class Level(
         if (byteTest != other.byteTest) return false
         if (!byteArrayTest.contentEquals(other.byteArrayTest)) return false
         if (listTest != other.listTest) return false
-        if (floatTest != other.floatTest) return false
-        if (doubleTest != other.doubleTest) return false
+        if (floatTest - other.floatTest > errorValue) return false
+        if (doubleTest - other.doubleTest > errorValue) return false
         if (intTest != other.intTest) return false
         if (listTestCompound != other.listTestCompound) return false
         if (compounds != other.compounds) return false

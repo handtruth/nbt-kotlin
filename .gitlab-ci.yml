@@ -1,4 +1,4 @@
-image: reg.handtruth.com/roots/kotlin/build
+image: openjdk:8
 
 stages:
   - build
