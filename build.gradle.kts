@@ -16,10 +16,9 @@ group = "com.handtruth.mc"
 version = androidGitVersion.name()
 
 repositories {
-    mavenCentral()
     jcenter()
     repositories {
-        maven("http://maven.handtruth.com/")
+        maven("https://mvn.handtruth.com")
     }
 }
 
@@ -92,7 +91,7 @@ jacoco {
 }
 
 tasks {
-    val jvmTest by getting
+    val jvmTest by getting {}
     val testCoverageReport by creating(JacocoReport::class) {
         dependsOn(jvmTest)
         group = "Reporting"

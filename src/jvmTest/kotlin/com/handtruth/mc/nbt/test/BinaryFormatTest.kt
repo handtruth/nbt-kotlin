@@ -17,13 +17,13 @@ class BinaryFormatTest {
     @Test
     fun readPlayerData() {
         // Real example
-        val tag = NBT.read(open("66f3f777-edce-3c09-a5d2-6118f9b9e223.dat"))
+        val tag = NBT.Default.read(open("66f3f777-edce-3c09-a5d2-6118f9b9e223.dat"))
         println(tag)
     }
 
     @Test
     fun readWriteBigNBT() {
-        val actual = NBT.read(open("bigtest.nbt"))
+        val actual = NBT.Default.read(open("bigtest.nbt"))
         val expected = buildCompoundTag {
             "Level" {
                 "shortTest" short 32767
@@ -63,15 +63,16 @@ class BinaryFormatTest {
         assertEquals(expected, actual)
         val expectedOutput = ByteArrayOutput()
         val actualOutput = ByteArrayOutput()
-        NBT.write(expectedOutput, expected)
-        NBT.write(actualOutput, actual)
+        NBT.Default.write(expectedOutput, expected)
+        NBT.Default.write(actualOutput, actual)
         assertEquals(expectedOutput.toByteArray().toList(), actualOutput.toByteArray().toList())
     }
 
     @Test
     fun deserializeBigNBT() {
         val expected = bigNBTObject
-        val actual = NBT.deserialize(BigNBTObject.serializer(), NBT.read(open("bigtest.nbt")))
+        val tag = NBT.Default.read(open("bigtest.nbt"))
+        val actual = NBT.Default.deserialize(BigNBTObject.serializer(), tag)
         assertEquals(expected, actual)
         println(actual)
     }
@@ -79,7 +80,7 @@ class BinaryFormatTest {
     @Test
     fun russian() {
         val expected = NamedProperty("Русский", 0.5f)
-        val actual = NBT.load(NamedProperty.serializer(), NBT.dump(NamedProperty.serializer(), expected))
+        val actual = NBT.Default.load(NamedProperty.serializer(), NBT.Default.dump(NamedProperty.serializer(), expected))
         assertEquals(expected, actual)
         println(actual)
     }
@@ -93,10 +94,10 @@ class BinaryFormatTest {
             }
         }
         val output = ByteArrayOutput()
-        NBT.write(output, root)
+        NBT.Default.write(output, root)
         val decode = ByteArrayInput(output.toByteArray())
-        val easy1 = NBT.read(decode)
-        val easy2 = NBT.read(input)
+        val easy1 = NBT.Default.read(decode)
+        val easy2 = NBT.Default.read(input)
         assertEquals(easy1, easy2)
     }
 }

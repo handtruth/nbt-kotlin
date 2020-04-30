@@ -4,7 +4,7 @@ import com.handtruth.mc.nbt.tags.*
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerialModule
 
-class NBTDecoder(
+internal class NBTDecoder(
     val tag: Tag<*>,
     override val context: SerialModule,
     override val updateMode: UpdateMode

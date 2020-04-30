@@ -60,8 +60,8 @@ class SerializerTest {
     @Test
     fun notchianBigObject() {
         val expected = bigNBTObject
-        val bytes = NBT.dump(BigNBTObject.serializer(), expected)
-        val actual = NBT.load(BigNBTObject.serializer(), bytes)
+        val bytes = NBT.Default.dump(BigNBTObject.serializer(), expected)
+        val actual = NBT.Default.load(BigNBTObject.serializer(), bytes)
         assertEquals(expected, actual)
     }
 }

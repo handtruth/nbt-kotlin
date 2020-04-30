@@ -31,10 +31,10 @@ class TagBuilderTest {
         }
         println(tag)
         val output = ByteArrayOutput()
-        NBT.write(output, tag)
+        NBT.Default.write(output, tag)
         val bytes = output.toByteArray()
         val input = ByteArrayInput(bytes)
-        val actual = NBT.read(input)
+        val actual = NBT.Default.read(input)
         assertEquals(tag, actual)
     }
 }

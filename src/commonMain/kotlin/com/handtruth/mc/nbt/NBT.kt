@@ -13,9 +13,22 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.UpdateMode
 import kotlinx.serialization.modules.EmptyModule
+import kotlinx.serialization.modules.SerialModule
 
-object NBT : BinaryFormat {
-    override val context = EmptyModule
+class NBTConfiguration {
+    companion object {
+        val Default = NBTConfiguration()
+    }
+}
+
+class NBT(
+    val config: NBTConfiguration = NBTConfiguration.Default,
+    override val context: SerialModule = EmptyModule
+) : BinaryFormat {
+
+    companion object {
+        val Default = NBT()
+    }
 
     override fun <T> dump(serializer: SerializationStrategy<T>, value: T): ByteArray {
         val output = ByteArrayOutput()

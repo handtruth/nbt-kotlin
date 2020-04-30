@@ -54,5 +54,5 @@ data class Player(val id: Int, val name: String, val inventory: Inventory, val m
     }
 }
 
-fun player2nbt(player: Player) = NBT.serialize(Player.serializer(), player) as CompoundTag
-fun nbt2player(tag: Tag<*>) = NBT.deserialize(Player.serializer(), tag)
+fun player2nbt(player: Player) = NBT().serialize(Player.serializer(), player) as CompoundTag
+fun nbt2player(tag: Tag<*>) = NBT().deserialize(Player.serializer(), tag)

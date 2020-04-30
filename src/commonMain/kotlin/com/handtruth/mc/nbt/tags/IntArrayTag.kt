@@ -13,7 +13,6 @@ class IntArrayTag(override var value: IntArray) : MutableTag<IntArray>(
 ) {
     override fun write(output: Output) {
         output.writeInt(value.size)
-        // TODO: Improve when fixed
         value.forEach { output.writeInt(it) }
     }
 

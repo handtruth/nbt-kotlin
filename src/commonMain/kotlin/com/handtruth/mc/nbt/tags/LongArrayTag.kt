@@ -10,7 +10,6 @@ class LongArrayTag(override var value: LongArray) : MutableTag<LongArray>(
 ) {
     override fun write(output: Output) {
         output.writeInt(value.size)
-        // TODO: Improve when fixed
         value.forEach { output.writeLong(it) }
     }
 

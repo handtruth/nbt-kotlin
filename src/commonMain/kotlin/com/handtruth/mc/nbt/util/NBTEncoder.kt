@@ -5,7 +5,7 @@ import com.handtruth.mc.nbt.tags.*
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerialModule
 
-class NBTEncoder(override val context: SerialModule) : Encoder {
+internal class NBTEncoder(override val context: SerialModule) : Encoder {
     var tag: Tag<*> = Tag.empty
         internal set
 

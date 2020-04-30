@@ -9,26 +9,23 @@ import kotlin.reflect.KClass
 
 fun readString(input: Input): String {
     val size = input.readShort().toInt()
+    val bytes = buildBytes {
+        input.copyTo(this, size)
+    }
     validate(size >= 0) { "string size is negative: $size" }
-    // TODO: Improve when fixed
-    val bytes = ByteArray(size) { input.readByte() }
-    val decodeInput = ByteArrayInput(bytes)
-    return decodeInput.readUtf8String(size)
+    return bytes.input().readUtf8String()
 }
 
 fun writeString(output: Output, value: String) {
-    // TODO: Improve when fixed
-    val outputEncode = ByteArrayOutput()
-    outputEncode.writeUtf8String(value)
-    val bytes = outputEncode.toByteArray()
-    output.writeShort(bytes.size.toShort())
-    // TODO: Improve when fixed
-    bytes.forEach { output.writeByte(it) }
+    val bytes = buildBytes {
+        writeUtf8String(value)
+    }
+    output.writeShort(bytes.size().toShort())
+    bytes.input().copyTo(output)
 }
 
 fun quoteString(value: String) = value.replace("\"", "\\\"")
 
-@PublishedApi
 internal fun Appendable.next(level: Int, pretty: Boolean) {
     if (pretty) {
         append("\n")
@@ -38,10 +35,10 @@ internal fun Appendable.next(level: Int, pretty: Boolean) {
     }
 }
 
-inline fun <T> smartJoin(iter: Iterator<T>, builder: Appendable,
-                         prefix: String = "", suffix: String = "", postfix: String = "",
-                         level: Int = 0, pretty: Boolean = false,
-                         chain: Appendable.(T) -> Unit = { append(it.toString()) }) {
+internal inline fun <T> smartJoin(iter: Iterator<T>, builder: Appendable,
+                                  prefix: String = "", suffix: String = "", postfix: String = "",
+                                  level: Int = 0, pretty: Boolean = false,
+                                  chain: Appendable.(T) -> Unit = { append(it.toString()) }) {
     if (iter.hasNext()) {
         builder.append(prefix)
         builder.next(level + 1, pretty)
